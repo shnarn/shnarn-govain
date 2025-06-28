@@ -1,0 +1,218 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Monitoring Timetable for Primary School Academy Committee</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header class="header text-center">
+        <div class="container">
+            <h1>Finance Monitoring Timetable</h1>
+            <p class="lead">For Academy Committee Link Member (Primary School)</p>
+        </div>
+    </header>
+    <div id="navbar-placeholder"></div>
+    <main class="container">
+        <section class="mb-4">
+            <p><strong>Role:</strong> Oversight of financial management to ensure pupil needs are met, statutory requirements are fulfilled, and robust financial monitoring is in place.<br><strong>Frequency:</strong> Monthly, termly, and annual tasks aligned with the academic year (September–August).</p>
+        </section>
+        <section class="term-section">
+            <h3>Autumn Term</h3>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">September</h5>
+                    <ul>
+                        <li>Meet with the School Business Manager (SBM) and Headteacher to review the approved budget.</li>
+                        <li>Ensure budget aligns with the School Improvement Plan (SIP) and prioritizes pupil outcomes (e.g., Early Years Foundation Stage (EYFS) provision, pupil premium).</li>
+                        <li>Verify compliance with Education and Skills Funding Agency (ESFA) requirements.</li>
+                        <li>Review and sign off on updated financial policies (e.g., Finance Policy, Charging and Remissions Policy).</li>
+                        <li>Ensure policies meet statutory requirements under the Academy Trust Handbook.</li>
+                        <li>Review allocation and planned expenditure for Pupil Premium and SEND funding.</li>
+                        <li>Confirm plans are evidence-based and focus on improving pupil outcomes (e.g., phonics support, early intervention).</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">October</h5>
+                    <ul>
+                        <li>Attend Finance Committee meeting to review monthly management accounts.</li>
+                        <li>Check income, expenditure, and variances against budget.</li>
+                        <li>Ensure pupil-focused spending (e.g., EYFS resources, reading interventions) is on track.</li>
+                        <li>Assess financial risks (e.g., funding changes, staffing costs) in the school's risk register.</li>
+                        <li>Ensure mitigation strategies are in place and monitored.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">November</h5>
+                    <ul>
+                        <li>Meet with SBM to prepare for the external audit.</li>
+                        <li>Review financial controls, procurement processes, and compliance with ESFA regulations.</li>
+                        <li>Review spending on pupil interventions (e.g., speech and language support, emotional wellbeing programs).</li>
+                        <li>Request evidence of impact (e.g., progress data, engagement levels).</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">December</h5>
+                    <ul>
+                        <li>Attend meeting to review the external audit findings.</li>
+                        <li>Ensure any recommendations are actioned and statutory obligations are met.</li>
+                        <li>Review termly financial report with Finance Committee.</li>
+                        <li>Confirm alignment with pupil needs and statutory compliance.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section class="term-section">
+            <h3>Spring Term</h3>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">January</h5>
+                    <ul>
+                        <li>Meet with SBM and Headteacher to assess budget performance.</li>
+                        <li>Identify underspends/overspends and agree reallocation to support pupil needs (e.g., additional teaching assistants for EYFS).</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">February</h5>
+                    <ul>
+                        <li>Review major contracts (e.g., playground maintenance, curriculum resources) for value for money and compliance with procurement rules.</li>
+                        <li>Attend Finance Committee meeting to review management accounts.</li>
+                        <li>Focus on staffing costs (largest expenditure) and pupil-focused spending (e.g., phonics programs).</li>
+                        <li>Meet with SENCO/Deputy Head to evaluate impact of Pupil Premium spending.</li>
+                        <li>Ensure disadvantaged pupils' needs are being met effectively (e.g., reading recovery programs).</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">March</h5>
+                    <ul>
+                        <li>Begin discussions with SBM and Headteacher on next year's draft budget.</li>
+                        <li>Ensure pupil needs (e.g., EYFS resources, SEND support) are prioritized.</li>
+                        <li>Review findings from internal audit (if applicable) and ensure actions are implemented.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">April</h5>
+                    <ul>
+                        <li>Attend Finance Committee meeting to scrutinize draft budget.</li>
+                        <li>Verify alignment with SIP and statutory funding requirements.</li>
+                        <li>Review expenditure on SEND provision and ensure compliance with Education, Health and Care Plans (EHCPs) and statutory duties.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section class="term-section">
+            <h3>Summer Term</h3>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">May</h5>
+                    <ul>
+                        <li>Review management accounts and forecast year-end position.</li>
+                        <li>Ensure no unexpected variances impact pupil provision.</li>
+                        <li>Evaluate key spending areas (e.g., utilities, agency staff) for cost-effectiveness.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">June</h5>
+                    <ul>
+                        <li>Attend Academy Committee meeting to approve final budget for next year.</li>
+                        <li>Ensure ESFA submission deadlines are met (by 31 July).</li>
+                        <li>Review overall impact of financial decisions on pupil outcomes (e.g., exam results, wellbeing).</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">July</h5>
+                    <ul>
+                        <li>Meet with SBM to review year-end accounts and prepare for ESFA submission.</li>
+                        <li>Confirm compliance with Academy Trust Handbook.</li>
+                        <li>Verify financial controls (e.g., segregation of duties, bank reconciliations) are robust.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">August</h5>
+                    <ul>
+                        <li>Review documentation for upcoming external audit.</li>
+                        <li>Ensure all financial records are complete and compliant.</li>
+                        <li>Reflect on financial oversight for the year and identify areas for improvement.</li>
+                        <li>Plan priorities for the next academic year.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section class="key-features">
+            <h3>Key Features</h3>
+            <ul>
+                <li><strong>Statutory Compliance:</strong> Ensures all financial and reporting requirements are met throughout the year.</li>
+                <li><strong>Pupil Focus:</strong> Budgeting and spending are designed to prioritize pupil outcomes and wellbeing.</li>
+                <li><strong>Continuous Monitoring:</strong> Regular reviews and committee meetings maintain high standards.</li>
+                <li><strong>Reporting:</strong> Structured reporting to the Academy Committee for accountability and transparency.</li>
+            </ul>
+        </section>
+    </main>
+    <footer class="footer mt-5 py-3 bg-light text-center">
+        <div class="container">
+            <span class="text-muted">&copy; 2025 Schools Governor Aid. All rights reserved.</span>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="../scripts.js"></script>
+</body>
+</html>

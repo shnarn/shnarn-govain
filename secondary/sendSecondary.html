@@ -1,0 +1,235 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secondary Link Committee Member SEND Monitoring Timetable</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header class="header text-center">
+        <div class="container">
+            <h1>Timetable for Secondary Link Committee Member Monitoring SEND</h1>
+            <p class="lead">A structured guide for overseeing Special Educational Needs and Disabilities (SEND) in a secondary school</p>
+        </div>
+    </header>
+    <div id="navbar-placeholder"></div>
+    <main class="container">
+        <section class="mb-4">
+            <p>This timetable is designed for a link committee member responsible for monitoring Special Educational Needs and Disabilities (SEND) in a secondary school. It ensures effective oversight of pupil needs, compliance with the SEND Code of Practice, and alignment with the academic year (Autumn, Spring, Summer terms).</p>
+        </section>
+        <section class="term-section">
+            <h3>Autumn Term</h3>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Committee Meeting (September/October)</h5>
+                    <ul>
+                        <li>Set the foundation for SEND monitoring for the year.</li>
+                        <li>Review and contribute to the approval of the school's SEND policy and action plan.</li>
+                        <li>Examine SEND student data (e.g., number of students, categories of need, new students transitioning from primary school).</li>
+                        <li>Ensure the SEND Coordinator provides an update on the identification and assessment of new SEND students.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Monitoring Activities</h5>
+                    <ul>
+                        <li>Meet with the SEND Coordinator to discuss how support plans (e.g., Education, Health and Care Plans - EHCPs) are being implemented.</li>
+                        <li>Observe a sample of lessons or conduct a learning walk to see how SEND students are supported in practice.</li>
+                        <li>Review a selection of EHCPs or support plans to confirm they are current and being followed.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Ongoing Responsibilities</h5>
+                    <ul>
+                        <li>Receive monthly updates from the SEND Coordinator on student progress, staff support, and any issues.</li>
+                        <li>Start collecting feedback from staff about SEND training and resource effectiveness.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section class="term-section">
+            <h3>Spring Term</h3>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Committee Meeting (January/February)</h5>
+                    <ul>
+                        <li>Assess SEND provision mid-year.</li>
+                        <li>Review SEND student progress using assessment data, comparing it to national benchmarks if available.</li>
+                        <li>Evaluate the effectiveness of support plans and interventions in place.</li>
+                        <li>Discuss any additional staff training needs related to SEND.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Monitoring Activities</h5>
+                    <ul>
+                        <li>Conduct a focused learning walk or classroom observation targeting SEND provision.</li>
+                        <li>Meet with a group of SEND students to hear their feedback on the support they receive.</li>
+                        <li>Check the school's SEND information report to ensure it's accurate, up-to-date, and meets statutory requirements.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Ongoing Responsibilities</h5>
+                    <ul>
+                        <li>Continue receiving monthly updates from the SEND Coordinator.</li>
+                        <li>Gather feedback from parents and students to spot any concerns or successes.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section class="term-section">
+            <h3>Summer Term</h3>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Committee Meeting (May/June)</h5>
+                    <ul>
+                        <li>Review the year's SEND provision and plan ahead.</li>
+                        <li>Assess the overall effectiveness of SEND provision using student outcomes, data trends, and feedback.</li>
+                        <li>Review how SEND funding and resources have been allocated and used.</li>
+                        <li>Help plan for the next academic year, including transitions for SEND students (e.g., to further education or new year groups).</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Monitoring Activities</h5>
+                    <ul>
+                        <li>Meet with parents of SEND students to get their perspectives on the school's support.</li>
+                        <li>Review the school's preparation for upcoming inspections (e.g., Ofsted) with a focus on SEND.</li>
+                        <li>Ensure all SEND documentation (e.g., EHCPs, support plans) is compliant and up-to-date.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Ongoing Responsibilities</h5>
+                    <ul>
+                        <li>Support the completion of the annual SEND report for the full committee or governing body.</li>
+                        <li>Confirm that all statutory deadlines (e.g., EHCP reviews) have been met.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section class="term-section">
+            <h3>Throughout the Year</h3>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Termly Visits</h5>
+                    <ul>
+                        <li>Make at least one visit per term to observe SEND provision (e.g., in classrooms or intervention sessions).</li>
+                        <li>Meet with the SEND Coordinator during each visit to discuss updates, challenges, or successes.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Training and Updates</h5>
+                    <ul>
+                        <li>Attend training sessions, webinars, or briefings on SEND legislation, best practices, and policy changes.</li>
+                        <li>Keep up-to-date with changes to the SEND Code of Practice or other statutory guidance.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Reporting</h5>
+                    <ul>
+                        <li>Submit a termly report to the full committee or governing body summarizing your SEND monitoring activities, findings, and recommendations.</li>
+                        <li>Ensure any concerns or suggestions are quickly addressed by school leadership.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Statutory Compliance</h5>
+                    <ul>
+                        <li>Regularly check the school's compliance with the SEND Code of Practice by:
+                            <ul>
+                                <li>Ensuring all SEND students have appropriate, current support plans.</li>
+                                <li>Confirming effective collaboration with external agencies (e.g., local authorities, health services).</li>
+                                <li>Verifying that parents and students are involved in decision-making (e.g., via meetings or surveys).</li>
+                            </ul>
+                        </li>
+                        <li>Monitor the school's process for identifying and assessing SEND students to ensure it's thorough and timely.</li>
+                        <li>Ensure the SEND information report is published on the school's website and updated as required.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Data and Feedback</h5>
+                    <ul>
+                        <li>Review termly data on SEND student progress and attainment to identify trends or areas needing attention.</li>
+                        <li>Use feedback from staff, students, and parents to evaluate SEND provision effectiveness.</li>
+                        <li>Consider comparing the school's SEND support to national standards or other similar schools.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section class="key-features">
+            <h3>Key Features</h3>
+            <ul>
+                <li><strong>Pupil Needs:</strong> You'll monitor whether SEND students are identified, supported, and making progress through regular data reviews, classroom observations, and direct feedback.</li>
+                <li><strong>Appraisal:</strong> You'll assess the effectiveness of SEND provision via termly evaluations, data analysis, and input from stakeholders.</li>
+                <li><strong>Statutory Compliance:</strong> Ensures all legal requirements are met throughout the year.</li>
+                <li><strong>Continuous Monitoring:</strong> Regular reviews and committee meetings maintain high standards.</li>
+                <li><strong>Reporting:</strong> Structured reporting to the Academy Committee for accountability and transparency.</li>
+            </ul>
+        </section>
+    </main>
+    <footer class="footer mt-5 py-3 bg-light text-center">
+        <div class="container">
+            <span class="text-muted">&copy; 2025 Schools Governor Aid. All rights reserved.</span>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="../scripts.js"></script>
+</body>
+</html>

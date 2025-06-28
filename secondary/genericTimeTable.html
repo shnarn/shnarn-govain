@@ -1,0 +1,222 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academy Committee Timetable</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body { background-color: #f8f9fa; }
+        .header { background-color: #007bff; color: white; padding: 2rem 0; margin-bottom: 2rem; }
+        .header h1 { font-size: 2.5rem; font-weight: bold; }
+        .term-section { margin-bottom: 2rem; }
+        .term-section h3 { color: #007bff; }
+        .key-features { background-color: #e9ecef; padding: 1.5rem; border-radius: 0.5rem; }
+    </style>
+</head>
+<body>
+    <header class="header text-center">
+        <div class="container">
+            <h1>Academy Committee Monitoring Timetable</h1>
+            <p class="lead">A Generic Schedule for Overseeing Secondary School Progress and Standards</p>
+        </div>
+    </header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="#navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="primaryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Primary
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="primaryDropdown">
+                            <li><a class="dropdown-item" href="../primary/timetable.html">Timetable</a></li>
+                            <li><a class="dropdown-item" href="../primary/finance.html">Finance</a></li>
+                            <li><a class="dropdown-item" href="../primary/H&S.html">Health &amp; Safety</a></li>
+                            <li><a class="dropdown-item" href="../primary/PupilPrem.html">Pupil Premium</a></li>
+                            <li><a class="dropdown-item" href="../primary/safeguarding.html">Safeguarding</a></li>
+                            <li><a class="dropdown-item" href="../primary/SEND_Link_Committee_Timetable.html">SEND</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="secondaryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Secondary
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="secondaryDropdown">
+                            <li><a class="dropdown-item" href="careers.html">Careers</a></li>
+                            <li><a class="dropdown-item" href="pupilPremSecondary.html">Pupil Premium</a></li>
+                            <li><a class="dropdown-item" href="safeguardingMonitoringTimetable.html">Safeguarding</a></li>
+                            <li><a class="dropdown-item" href="sendSecondary.html">SEND</a></li>
+                            <li><a class="dropdown-item" href="financialMonitoring.html">Financial</a></li>
+                            <li><a class="dropdown-item" href="h&s.html">Health &amp; Safety</a></li>
+                            <li><a class="dropdown-item" href="genericTimeTable.html">Generic Timetable</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../schoolVisit/school_visit_form.html">School Visit</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="mb-4">
+            <p>This timetable is designed for an academy committee to monitor the progress and standards of a secondary school across all subjects for Key Stage 3 (Years 7-9) and Key Stage 4 (Years 10-11). It incorporates statutory checks, such as curriculum compliance, student assessment, and reporting, ensuring comprehensive oversight throughout the academic year.</p>
+        </section>
+
+        <section class="term-section">
+            <h3>Autumn Term</h3>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Start of Term (September)</h5>
+                    <p><strong>Purpose:</strong> Establish a baseline and set expectations for the year.</p>
+                    <p><strong>Activities:</strong></p>
+                    <ul>
+                        <li>Review previous year's outcomes, including GCSE results (Key Stage 4) and internal assessments (Key Stage 3).</li>
+                        <li>Set academic and pastoral targets for the current year.</li>
+                        <li>Confirm curriculum compliance for Key Stage 3 and Key Stage 4 (broad and balanced, including mandated subjects).</li>
+                    </ul>
+                    <p><strong>Statutory Checks:</strong> Curriculum compliance, review of published exam results, and school performance data on the website.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Mid-Term (October/November)</h5>
+                    <p><strong>Purpose:</strong> Assess initial progress and teaching quality.</p>
+                    <p><strong>Activities:</strong></p>
+                    <ul>
+                        <li>First progress review: Analyze initial assessment data across all subjects and year groups.</li>
+                        <li>Teaching quality review: Examine lesson observation summaries.</li>
+                        <li>Parental engagement: Verify parents' evenings and progress reports are scheduled.</li>
+                    </ul>
+                    <p><strong>Statutory Checks:</strong> Ensure student progress is assessed and reported to parents as required.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="term-section">
+            <h3>Spring Term</h3>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Early Term (January)</h5>
+                    <p><strong>Purpose:</strong> Focus on Key Stage 4 preparation and support.</p>
+                    <p><strong>Activities:</strong></p>
+                    <ul>
+                        <li>Review Year 11 mock exam results for Key Stage 4 progress.</li>
+                        <li>Evaluate intervention plans for underperforming students.</li>
+                        <li>Monitor coursework and controlled assessment progress.</li>
+                    </ul>
+                    <p><strong>Statutory Checks:</strong> Confirm GCSE preparation aligns with national standards and exam board regulations.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Mid-Term (February/March)</h5>
+                    <p><strong>Purpose:</strong> Evaluate mid-year progress and plan ahead.</p>
+                    <p><strong>Activities:</strong></p>
+                    <ul>
+                        <li>Second progress review: Analyze updated assessment data.</li>
+                        <li>Curriculum evaluation: Assess effectiveness and plan for next year.</li>
+                        <li>Review SEND provision for adequate support and outcomes.</li>
+                        <li>Gather student and staff feedback via surveys or focus groups.</li>
+                    </ul>
+                    <p><strong>Statutory Checks:</strong> SEND support, careers education, and equality/diversity policies.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="term-section">
+            <h3>Summer Term</h3>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Early Term (April/May)</h5>
+                    <p><strong>Purpose:</strong> Ensure readiness for external exams and internal assessments.</p>
+                    <p><strong>Activities:</strong></p>
+                    <ul>
+                        <li>Oversee GCSE exam preparations and regulatory compliance.</li>
+                        <li>Plan and prepare for Key Stage 3 end-of-year assessments.</li>
+                    </ul>
+                    <p><strong>Statutory Checks:</strong> Verify exam entry processes and safeguarding during exams.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">End of Term (June/July)</h5>
+                    <p><strong>Purpose:</strong> Review year's outcomes and prepare for the next cycle.</p>
+                    <p><strong>Activities:</strong></p>
+                    <ul>
+                        <li>Final progress review: Analyze end-of-year data for Key Stage 3 and preliminary GCSE results.</li>
+                        <li>Summarize teaching standards based on observations and professional development.</li>
+                        <li>Conduct statutory compliance check: Reporting, website updates, attendance/behavior data.</li>
+                        <li>Plan for the next academic year based on outcomes.</li>
+                    </ul>
+                    <p><strong>Statutory Checks:</strong> Full compliance with curriculum, assessment, reporting, safeguarding, SEND, careers, and website requirements.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="key-features">
+            <h3>Key Features of the Timetable</h3>
+            <ul>
+                <li><strong>Generality:</strong> Focuses on whole-school activities, applicable to all subjects, with subject leaders providing supporting reports.</li>
+                <li><strong>Coverage of Key Stages:</strong> Addresses Key Stage 3 (internal assessments) and Key Stage 4 (exam preparation and coursework).</li>
+                <li><strong>Statutory Integration:</strong> Includes checks on curriculum, assessment, reporting, safeguarding, SEND, equality, careers, and public reporting.</li>
+                <li><strong>Flexibility:</strong> Approximate timings allow adaptation to specific school calendars while maintaining a consistent framework.</li>
+            </ul>
+            <p>This timetable enables systematic monitoring of progress and standards, ensuring educational excellence and compliance with UK statutory requirements.</p>
+        </section>
+    </main>
+
+    <footer class="footer mt-5 py-3 bg-light text-center">
+        <div class="container">
+            <span class="text-muted">&copy; 2025 Schools Governor Aid. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

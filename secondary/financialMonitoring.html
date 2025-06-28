@@ -1,0 +1,248 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Monitoring Timetable</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body { background-color: #f8f9fa; }
+        .header { background-color: #007bff; color: white; padding: 2rem 0; margin-bottom: 2rem; }
+        .header h1 { font-size: 2.5rem; font-weight: bold; }
+        .term-section { margin-bottom: 2rem; }
+        .term-section h3 { color: #007bff; }
+        .key-features, .notes-section { background-color: #e9ecef; padding: 1.5rem; border-radius: 0.5rem; }
+    </style>
+</head>
+<body>
+    <header class="header text-center">
+        <div class="container">
+            <h1>Finance Monitoring Timetable</h1>
+            <p class="lead">For Academy Committee Link Member</p>
+        </div>
+    </header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="#navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="primaryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Primary
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="primaryDropdown">
+                            <li><a class="dropdown-item" href="../primary/timetable.html">Timetable</a></li>
+                            <li><a class="dropdown-item" href="../primary/finance.html">Finance</a></li>
+                            <li><a class="dropdown-item" href="../primary/H&S.html">Health &amp; Safety</a></li>
+                            <li><a class="dropdown-item" href="../primary/PupilPrem.html">Pupil Premium</a></li>
+                            <li><a class="dropdown-item" href="../primary/safeguarding.html">Safeguarding</a></li>
+                            <li><a class="dropdown-item" href="../primary/SEND_Link_Committee_Timetable.html">SEND</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="secondaryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Secondary
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="secondaryDropdown">
+                            <li><a class="dropdown-item" href="careers.html">Careers</a></li>
+                            <li><a class="dropdown-item" href="pupilPremSecondary.html">Pupil Premium</a></li>
+                            <li><a class="dropdown-item" href="safeguardingMonitoringTimetable.html">Safeguarding</a></li>
+                            <li><a class="dropdown-item" href="sendSecondary.html">SEND</a></li>
+                            <li><a class="dropdown-item" href="financialMonitoring.html">Financial</a></li>
+                            <li><a class="dropdown-item" href="h&s.html">Health &amp; Safety</a></li>
+                            <li><a class="dropdown-item" href="genericTimeTable.html">Generic Timetable</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../schoolVisit/school_visit_form.html">School Visit</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="container">
+        <section class="mb-4">
+            <p><strong>Role:</strong> Oversight of financial management to ensure pupil needs are met, statutory requirements are fulfilled, and robust financial monitoring is in place. <br><strong>Frequency:</strong> Monthly, termly, and annual tasks aligned with the academic year (September–August).</p>
+        </section>
+        <section class="term-section">
+            <h3>Autumn Term</h3>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">September</h5>
+                    <ul>
+                        <li>Meet with the School Business Manager (SBM) and Headteacher to review the approved budget.</li>
+                        <li>Ensure budget aligns with the School Improvement Plan (SIP) and prioritizes pupil outcomes (e.g., SEN provision, pupil premium).</li>
+                        <li>Verify compliance with Education and Skills Funding Agency (ESFA) requirements.</li>
+                        <li>Review and sign off on updated financial policies (e.g., Finance Policy, Charging and Remissions Policy).</li>
+                        <li>Ensure policies meet statutory requirements under the Academy Trust Handbook.</li>
+                        <li>Review allocation and planned expenditure for Pupil Premium and SEND funding.</li>
+                        <li>Confirm plans are evidence-based and focused on improving pupil outcomes.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">October</h5>
+                    <ul>
+                        <li>Attend Finance Committee meeting to review monthly management accounts.</li>
+                        <li>Check income, expenditure, and variances against budget.</li>
+                        <li>Ensure pupil-focused spending (e.g., interventions, resources) is on track.</li>
+                        <li>Assess financial risks (e.g., funding changes, staffing costs) in the school's risk register.</li>
+                        <li>Ensure mitigation strategies are in place and monitored.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">November</h5>
+                    <ul>
+                        <li>Meet with SBM to prepare for the external audit.</li>
+                        <li>Review financial controls, procurement processes, and compliance with ESFA regulations.</li>
+                        <li>Review spending on pupil interventions (e.g., tutoring, mental health support).</li>
+                        <li>Request evidence of impact (e.g., progress data, attendance).</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">December</h5>
+                    <ul>
+                        <li>Attend meeting to review the external audit findings.</li>
+                        <li>Ensure any recommendations are actioned and statutory obligations are met.</li>
+                        <li>Review termly financial report with Finance Committee.</li>
+                        <li>Confirm alignment with pupil needs and statutory compliance.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section class="term-section">
+            <h3>Spring Term</h3>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">January</h5>
+                    <ul>
+                        <li>Meet with SBM and Headteacher to assess budget performance.</li>
+                        <li>Identify underspends/overspends and agree reallocation to support pupil needs.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">February</h5>
+                    <ul>
+                        <li>Review monthly management accounts and check for variances.</li>
+                        <li>Monitor spending on interventions and resources for impact.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">March</h5>
+                    <ul>
+                        <li>Prepare for the end-of-year financial review.</li>
+                        <li>Ensure all statutory returns are on track for submission.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section class="term-section">
+            <h3>Summer Term</h3>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">April</h5>
+                    <ul>
+                        <li>Review financial reports to ensure pupil premium funding is being spent appropriately and in line with the strategy.</li>
+                        <li>Verify that records of pupil premium eligibility are accurate and up to date.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">May</h5>
+                    <ul>
+                        <li>Visit the school to observe interventions, focusing on any changes or adjustments made.</li>
+                        <li>Meet with staff to discuss progress, challenges, and any additional support required.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">June</h5>
+                    <ul>
+                        <li>Review Summer term assessment data for pupil premium students.</li>
+                        <li>Begin drafting the impact evaluation for the year in collaboration with the pupil premium coordinator.</li>
+                        <li>Ensure preparations are underway for the next academic year's pupil premium strategy.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">July</h5>
+                    <ul>
+                        <li>Finalise the impact evaluation report, assessing the overall effectiveness of the pupil premium strategy.</li>
+                        <li>Contribute to planning the next year's pupil premium strategy based on the evaluation findings.</li>
+                        <li>Prepare a final report for the academy committee, including the impact evaluation and recommendations for the future.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section class="key-features">
+            <h3>Key Features</h3>
+            <ul>
+                <li><strong>Statutory Compliance:</strong> Ensures all financial and reporting requirements are met throughout the year.</li>
+                <li><strong>Pupil Focus:</strong> Budgeting and spending are designed to prioritize pupil outcomes and wellbeing.</li>
+                <li><strong>Continuous Monitoring:</strong> Regular reviews and committee meetings maintain high standards.</li>
+                <li><strong>Reporting:</strong> Structured reporting to the Academy Committee for accountability and transparency.</li>
+            </ul>
+        </section>
+    </main>
+    <footer class="footer mt-5 py-3 bg-light text-center">
+        <div class="container">
+            <span class="text-muted">&copy; 2025 Schools Governor Aid. All rights reserved.</span>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
