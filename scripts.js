@@ -37,28 +37,16 @@ function loadFileData(filename) {
 function loadNavbar() {
   var placeholder = document.getElementById('navbar-placeholder');
   if (!placeholder) return;
-  // Try to find navbar.html in the current directory, then parent, then root
-  var paths = [
-    'navbar.html',
-    '../navbar.html',
-    '../../navbar.html'
-  ];
-  function tryPath(i) {
-    if (i >= paths.length) return;
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', paths[i], true);
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          placeholder.innerHTML = xhr.responseText;
-        } else {
-          tryPath(i + 1);
-        }
-      }
-    };
-    xhr.send();
-  }
-  tryPath(0);
+  // Always try to load navbar.html from the root (works for GitHub Pages)
+  var path = 'navbar.html';
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', path, true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      placeholder.innerHTML = xhr.responseText;
+    }
+  };
+  xhr.send();
 }
 
 document.addEventListener('DOMContentLoaded', loadNavbar);
