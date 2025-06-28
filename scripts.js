@@ -37,13 +37,38 @@ function loadFileData(filename) {
 function loadNavbar() {
   var placeholder = document.getElementById('navbar-placeholder');
   if (!placeholder) return;
-  // Always try to load navbar.html from the root (works for GitHub Pages)
+  
+  // Determine the correct path to navbar.html based on current page location
   var path = 'navbar.html';
+  var currentPath = window.location.pathname;
+  
+  // If we're in a subdirectory, we need to go up one level
+  if (currentPath.includes('/primary/') || currentPath.includes('/secondary/') || currentPath.includes('/schoolVisit/')) {
+    path = '../navbar.html';
+  }
+  
+  // Add cache-busting parameter to prevent browser caching
+  var cacheBuster = '?v=' + Date.now();
+  path += cacheBuster;
+  
   var xhr = new XMLHttpRequest();
   xhr.open('GET', path, true);
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4 && xhr.status === 200) {
       placeholder.innerHTML = xhr.responseText;
+    } else if (xhr.readyState === 4 && xhr.status === 404) {
+      // If the first path failed, try the alternative
+      if (path.includes('../navbar.html')) {
+        var fallbackPath = 'navbar.html' + cacheBuster;
+        var fallbackXhr = new XMLHttpRequest();
+        fallbackXhr.open('GET', fallbackPath, true);
+        fallbackXhr.onreadystatechange = function() {
+          if (fallbackXhr.readyState === 4 && fallbackXhr.status === 200) {
+            placeholder.innerHTML = fallbackXhr.responseText;
+          }
+        };
+        fallbackXhr.send();
+      }
     }
   };
   xhr.send();
