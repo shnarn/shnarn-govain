@@ -3,4 +3,14 @@ body { background-color: #f8f9fa; }
 .header h1 { font-size: 2.5rem; font-weight: bold; }
 .term-section { margin-bottom: 2rem; }
 .term-section h3 { color: #007bff; }
-.key-features, .notes-section { background-color: #e9ecef; padding: 1.5rem; border-radius: 0.5rem; } 
+.key-features, .notes-section { background-color: #e9ecef; padding: 1.5rem; border-radius: 0.5rem; }
+.container { max-width: 900px; padding: 20px; }
+.section-header { background-color: #007bff; color: white; padding: 10px; border-radius: 5px; margin-top: 20px; }
+.month-section { margin-left: 20px; }
+.list-group-item { border-left: 4px solid #007bff; margin-bottom: 10px; }
+h1 { font-size: 2rem; margin-bottom: 20px; text-align: center; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.2rem; }
+.explanation { font-style: italic; color: #6c757d; margin-bottom: 20px; }
+.footer { text-align: center; padding: 20px 0; background-color: #343a40; color: #ffffff; margin-top: 30px; }
+.card { margin-bottom: 1.5rem; } 
