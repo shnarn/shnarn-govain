@@ -88,7 +88,7 @@
 </head>
 <body>
     <div id="navbar-placeholder"></div>
-    <div class="container">
+    <div class="container" id="agreement-container">
         <h1 class="text-center mb-4">Expectation for Academy Committee Member</h1>
 
         <section>
@@ -240,7 +240,7 @@
     <script>
         // Save Agreement as PDF (all content inside .container except the save button/note)
         document.getElementById('saveTxtBtn').addEventListener('click', function() {
-            var container = document.querySelector('.container');
+            var container = document.getElementById('agreement-container');
             var saveSection = document.getElementById('save-section');
             // Temporarily hide the save section for PDF extraction
             saveSection.style.display = 'none';
