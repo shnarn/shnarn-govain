@@ -238,18 +238,22 @@
     <!-- jsPDF CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
-        // Save Agreement as PDF (only the .container content, excluding navbar and save button/note)
+        // Save Agreement as PDF (all content inside .container except the save button/note)
         document.getElementById('saveTxtBtn').addEventListener('click', function() {
             var container = document.querySelector('.container');
             var saveSection = document.getElementById('save-section');
             // Temporarily hide the save section for PDF extraction
             saveSection.style.display = 'none';
-            // Get only the visible text content of the container (excluding navbar and save button/note)
+            // Get all content inside .container except the save-section
+            var contentNodes = Array.from(container.childNodes).filter(function(node) {
+                return !(node.nodeType === 1 && node.id === 'save-section');
+            });
             var text = '';
-            // Loop through all children of .container except #save-section
-            Array.from(container.children).forEach(function(child) {
-                if (child.id !== 'save-section') {
-                    text += child.innerText + '\n\n';
+            contentNodes.forEach(function(node) {
+                if (node.nodeType === 1) { // Element
+                    text += node.innerText + '\n\n';
+                } else if (node.nodeType === 3) { // Text
+                    text += node.textContent.trim() + '\n';
                 }
             });
             saveSection.style.display = '';
