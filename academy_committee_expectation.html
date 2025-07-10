@@ -1,0 +1,267 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academy Committee Member Expectation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 800px;
+            margin-top: 40px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #343a40;
+        }
+        h2 {
+            margin-top: 30px;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+        p, li {
+            line-height: 1.6;
+            color: #495057;
+        }
+        .signature-section {
+            margin-top: 40px;
+        }
+        .signature-line {
+            border-bottom: 1px solid #000;
+            width: 300px;
+            margin: 20px 0;
+        }
+        .notes {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Expectation for Academy Committee Member</h1>
+
+        <section>
+            <h2>1. Introduction</h2>
+            <p>This expectation outlines the terms and conditions under which <strong>Name: _________________________</strong> agrees to serve as a member of the Academy Committee of <strong>Academy Name: _________________________</strong>. As a committee member, you are expected to uphold the highest standards of ethical conduct, as defined by the Seven Principles of Public Life (the Nolan Principles), and to comply with all statutory requirements pertaining to your role. Your appointment reflects your commitment to the governance and success of the academy, its students, and the wider community.</p>
+        </section>
+
+        <section>
+            <h2>2. Commitment to the Nolan Principles</h2>
+            <p>As a member of the Academy Committee, you agree to adhere to the following Seven Principles of Public Life in all your actions and decisions:</p>
+            <ul>
+                <li><strong>Selflessness:</strong> You will act solely in the public interest, without seeking personal gain or benefits for yourself, your family, or your friends.</li>
+                <li><strong>Integrity:</strong> You will avoid placing yourself under any obligation to individuals or organizations that might attempt to influence you improperly in your work.</li>
+                <li><strong>Objectivity:</strong> You will make decisions impartially, fairly, and on merit, using the best evidence and without discrimination or bias.</li>
+                <li><strong>Accountability:</strong> You will be accountable to the public for your decisions and actions and submit yourself to scrutiny necessary to ensure this.</li>
+                <li><strong>Openness:</strong> You will act and make decisions in an open and transparent manner, providing information unless restricted by law or confidentiality.</li>
+                <li><strong>Honesty:</strong> You will be truthful in all communications and dealings.</li>
+                <li><strong>Leadership:</strong> You will exhibit these principles in your own behaviour, actively promote them, and challenge any poor behaviour that contravenes these standards.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>3. Roles and Responsibilities</h2>
+            <p>As a member of the Academy Committee, your primary responsibilities include:</p>
+            <ul>
+                <li>Attending all committee meetings and participating actively in discussions and decision-making.</li>
+                <li>Contributing to the development, implementation, and monitoring of the academy’s strategic plan.</li>
+                <li>Reviewing and approving the academy’s budget and financial statements to ensure value for money.</li>
+                <li>Monitoring the academy’s educational performance and outcomes against agreed targets and standards.</li>
+                <li>Supporting and constructively challenging the headteacher and senior leadership team.</li>
+                <li>Participating in the appointment and performance management of the headteacher.</li>
+                <li>Ensuring the academy complies with its funding agreement with the Department for Education and other legal obligations.</li>
+                <li>Undertaking training and development to enhance your effectiveness as a committee member.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>4. Code of Conduct</h2>
+            <p>You agree to abide by the following code of conduct:</p>
+            <ul>
+                <li>Uphold the Nolan Principles of selflessness, integrity, objectivity, accountability, openness, honesty, and leadership.</li>
+                <li>Maintain strict confidentiality regarding sensitive information discussed in committee meetings, disclosing such information only when legally required or authorized by the committee.</li>
+                <li>Declare any personal, financial, or professional interests that could conflict with your duties as a committee member, and recuse yourself from related discussions or decisions.</li>
+                <li>Refrain from accepting gifts, hospitality, or benefits that could be perceived as influencing your decisions.</li>
+                <li>Comply with all applicable laws, regulations, and academy policies relevant to your role.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>5. Statutory Duties</h2>
+            <p>As a committee member, you acknowledge your legal responsibilities as both a trustee of the academy trust and a director of the academy trust company. These duties include, but are not limited to:</p>
+            <ul>
+                <li>Acting in accordance with the Charities Act 2022, ensuring the academy trust operates in the best interests of its charitable objectives.</li>
+                <li>Fulfilling obligations under company law as a director of the academy trust, a company limited by guarantee.</li>
+                <li>Ensuring the academy adheres to its funding agreement with the Department for Education.</li>
+                <li>Complying with education legislation, including the Education Act 2011, Education and Inspections Act 2006, and other relevant statutes.</li>
+                <li>Meeting obligations under the Equality Act 2010 to promote equality and eliminate discrimination.</li>
+                <li>Safeguarding and promoting the welfare of children, in line with the Children Act 2004 and related guidance.</li>
+                <li>Ensuring compliance with data protection laws, including the General Data Protection Regulation (GDPR) and the Data Act 2025.</li>
+            </ul>
+            <p>You are expected to familiarize yourself with these legal requirements and seek advice if uncertain about any aspect of your duties.</p>
+        </section>
+
+        <section>
+            <h2>6. Eligibility</h2>
+            <p>By signing this expectation, you confirm that you are not disqualified from acting as a trustee of a charity or as a company director, as outlined in the Charities Act 2022 and the Company Directors Disqualification Act 1986. This includes, but is not limited to, having no unspent criminal convictions, not being bankrupt, and not being subject to a disqualification order.</p>
+        </section>
+
+        <section>
+            <h2>7. Term of Office</h2>
+            <p>Your appointment as a committee member is for a term of <strong>years,</strong> <i>(e.g, 4 years)<i><storng>: _________</strong>, commencing on <strong>start date: ____________</strong>, unless terminated earlier in accordance with this expectation or the academy’s articles of association. Your term may be renewed by mutual agreement, subject to the academy’s governance policies.</p>
+        </section>
+
+        <section>
+            <h2>8. Resignation and Removal</h2>
+            <ul>
+                <li><strong>Resignation:</strong> You may resign from your position by providing <strong>X months,</strong> <i>(e.g., 2 months)</i><strong>: _________</strong> written notice to the chair of the committee.</li>
+                <li><strong>Removal:</strong> The committee may remove you from your position if you fail to attend [X, e.g., 3] consecutive meetings without good reason, breach the terms of this expectation, or for other reasons specified in the academy’s articles of association.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>9. Confidentiality</h2>
+            <p>You agree to maintain the confidentiality of all information acquired during your tenure as a committee member, except where disclosure is required by law or explicitly authorized by the committee.</p>
+        </section>
+
+        <section>
+            <h2>10. Conflicts of Interest</h2>
+            <p>You must promptly declare any personal, financial, or professional interests that could conflict with your duties, including relationships with staff, suppliers, or organizations that may engage with the academy. If a conflict arises, you will withdraw from any related discussions or decisions to ensure impartiality.</p>
+        </section>
+
+        <section>
+            <h2>11. Training and Development</h2>
+            <p>You agree to participate in appropriate training and development opportunities provided by the academy to enhance your ability to perform your duties effectively.</p>
+        </section>
+
+        <section>
+            <h2>12. Expenses</h2>
+            <p>You may claim reasonable expenses incurred in the course of your duties, such as travel to meetings, in accordance with the academy’s expenses policy.</p>
+        </section>
+
+        <section>
+            <h2>13. Volunteer Status</h2>
+            <p>Your role as a committee member is voluntary and does not constitute employment with the academy. You will not receive remuneration for your services, except for the reimbursement of approved expenses.</p>
+        </section>
+
+        <section>
+            <h2>14. Liability and Indemnity</h2>
+            <p>The academy trust maintains insurance to cover your liabilities as a trustee and director, provided you act honestly and in good faith. Further details are outlined in the academy’s articles of association, which provide for indemnity to the extent permitted by law.</p>
+        </section>
+
+        <section>
+            <h2>15. Amendments</h2>
+            <p>This expectation may be amended by mutual agreement in writing between you and the Academy Committee.</p>
+        </section>
+
+        <section>
+            <h2>16. Agreement</h2>
+            <p>By signing below, you acknowledge that you have read and understood this expectation and agree to abide by its terms and conditions.</p>
+            <div class="signature-section">
+                <p><strong>Signed by the Committee Member:</strong></p>
+                <p>Signature: <span class="signature-line"></span></p>
+                <p>Name: _______________________________</p>
+                <p>Date: _______________________________</p>
+                <p class="mt-4"><strong>Signed on behalf of the Academy Committee:</strong></p>
+                <p>Signature: <span class="signature-line"></span></p>
+                <p>Name: _______________________________</p>
+                <p>Position: [e.g., Chair of the Committee]</p>
+                <p>Date: _______________________________</p>
+            </div>
+        </section>
+
+        <section class="notes">
+            <h2>Notes</h2>
+            <p>This expectation integrates the Seven Nolan Principles as a core ethical framework, ensuring the committee member commits to these standards in their conduct and decision-making. Statutory requirements are addressed by referencing key legal obligations under charity law, company law, education legislation, and other relevant regulations, with a broad commitment to compliance to cover any additional or future requirements. In practice, this document should be reviewed by legal professionals to ensure full compliance with current laws and the academy’s specific governance framework, such as its articles of association or funding agreement.</p>
+        </section>
+        <!-- Save Button and Note -->
+        <div class="mt-4 mb-3" id="save-section">
+            <button class="btn btn-primary" id="saveTxtBtn">Save Agreement as Text File</button>
+            <p class="mt-2" style="font-size: 0.97em; color: #555;">
+                <strong>Note:</strong> Click the button to save this agreement to your device as a text file. You can then fill it in electronically or print it out. Once completed, you may email it to the clerk or provide a hard copy.
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jsPDF CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        // Save Agreement as PDF
+        document.getElementById('saveTxtBtn').addEventListener('click', function() {
+            var container = document.querySelector('.container');
+            var saveSection = document.getElementById('save-section');
+            // Temporarily hide the save section for PDF extraction
+            saveSection.style.display = 'none';
+            var text = container.innerText;
+            saveSection.style.display = '';
+            // Use jsPDF to generate PDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+            const lineHeight = 16;
+            const margin = 40;
+            const maxWidth = 515; // a4 width - 2*margin
+            let y = margin;
+            // Split text into lines that fit the page
+            const lines = doc.splitTextToSize(text, maxWidth);
+            lines.forEach(line => {
+                if (y > 800 - margin) { // a4 height - margin
+                    doc.addPage();
+                    y = margin;
+                }
+                doc.text(line, margin, y);
+                y += lineHeight;
+            });
+            doc.save('Academy_Committee_Expectation.pdf');
+        });
+    </script>
+</body>
+</html>
