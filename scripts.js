@@ -43,7 +43,12 @@ function loadNavbar() {
   var currentPath = window.location.pathname;
   
   // If we're in a subdirectory, we need to go up one level
-  if (currentPath.includes('/primary/') || currentPath.includes('/secondary/') || currentPath.includes('/schoolVisit/')) {
+  if (
+    currentPath.includes('/primary/') ||
+    currentPath.includes('/secondary/') ||
+    currentPath.includes('/schoolVisit/') ||
+    currentPath.includes('/6thForm/')
+  ) {
     path = '../navbar.html';
   }
   
