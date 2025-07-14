@@ -1,0 +1,376 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academy Committee Link Member Termly Report Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; background-color: #f8f9fa; }
+        .form-section { margin-bottom: 30px; }
+        .form-section h2 { border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        .checkbox-list label { margin-right: 20px; }
+        .form-control, .form-select { border-radius: 5px; }
+        .btn-submit { background-color: #007bff; border: none; }
+        .btn-submit:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+    <script>if (typeof loadNavbar === 'function') loadNavbar();</script>
+    <div class="container">
+        <h1 class="text-center mb-4">Academy Committee Link Member Termly Report Form</h1>
+        <p class="text-muted mb-4">
+            <strong>Purpose:</strong> This form enables the Link Member to report on monitoring activities for any subject or area (e.g., curriculum, SEND, behaviour, attendance, finance, pastoral) across primary to 6th form, ensuring oversight of pupil needs, teaching quality, and statutory compliance. Submit to the Academy Committee at the end of each term (Autumn, Winter, Spring, Summer).
+        </p>
+        <p class="text-muted mb-5">
+            <strong>Instructions:</strong> Complete all sections, tailoring responses to the specific subject or area monitored. Reference relevant legislation (e.g., Education Act 2002, SEND Code of Practice, Equality Act 2010, KCSIE) and provide evidence-based findings. Keep responses concise, highlighting key points for Academy Committee discussion.
+        </p>
+
+        <form>
+            <!-- 1. Link Member and Focus Area -->
+            <div class="form-section">
+                <h2>1. Link Member and Focus Area</h2>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Your Name">
+                </div>
+                <div class="mb-3">
+                    <label for="role" class="form-label">Role</label>
+                    <input type="text" class="form-control" id="role" placeholder="Link Member for [Subject/Area, e.g., Maths, SEND, Finance, Pastoral Care]">
+                </div>
+                <div class="mb-3">
+                    <label for="term" class="form-label">Term</label>
+                    <select class="form-select" id="term">
+                        <option selected disabled>Select Term</option>
+                        <option value="Autumn">Autumn</option>
+                        <option value="Winter">Winter</option>
+                        <option value="Spring">Spring</option>
+                        <option value="Summer">Summer</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="academicYear" class="form-label">Academic Year</label>
+                    <input type="text" class="form-control" id="academicYear" placeholder="e.g., 2024-2025">
+                </div>
+                <div class="mb-3">
+                    <label for="schoolPhase" class="form-label">School Phase</label>
+                    <select class="form-select" id="schoolPhase">
+                        <option selected disabled>Select Phase</option>
+                        <option value="Primary">Primary</option>
+                        <option value="Secondary">Secondary</option>
+                        <option value="6th Form">6th Form</option>
+                        <option value="All">All</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 2. Monitoring Activities -->
+            <div class="form-section">
+                <h2>2. Monitoring Activities</h2>
+                <p class="text-muted">Describe key activities undertaken this term (e.g., learning walks, meetings with staff, data reviews, policy checks).</p>
+                <div class="mb-3">
+                    <label for="activity1" class="form-label">Activity 1</label>
+                    <textarea class="form-control" id="activity1" rows="3" placeholder="e.g., Conducted learning walk in [subject/area] to observe teaching quality and pupil engagement"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="activity2" class="form-label">Activity 2</label>
+                    <textarea class="form-control" id="activity2" rows="3" placeholder="e.g., Met with [staff role, e.g., SEND Coordinator] to review support plans"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="activity3" class="form-label">Activity 3</label>
+                    <textarea class="form-control" id="activity3" rows="3" placeholder="e.g., Reviewed financial expenditure reports for [area, e.g., Pupil Premium]"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="additionalActivities" class="form-label">Additional Activities</label>
+                    <textarea class="form-control" id="additionalActivities" rows="3" placeholder="List others, e.g., pupil voice sessions, parent meetings"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="evidence" class="form-label">Evidence</label>
+                    <textarea class="form-control" id="evidence" rows="3" placeholder="Summarize evidence collected, e.g., observation notes, meeting minutes, data reports"></textarea>
+                </div>
+            </div>
+
+            <!-- 3. Pupil Outcomes and Needs -->
+            <div class="form-section">
+                <h2>3. Pupil Outcomes and Needs</h2>
+                <p class="text-muted">Analyze pupil progress, attainment, or outcomes in the monitored area, with a focus on specific groups (e.g., SEND, disadvantaged, EAL).</p>
+                <div class="mb-3">
+                    <label for="dataReviewed" class="form-label">Data Reviewed</label>
+                    <textarea class="form-control" id="dataReviewed" rows="3" placeholder="e.g., Attendance rates, exam results, progress reports, behaviour logs"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="keyFindings" class="form-label">Key Findings</label>
+                    <textarea class="form-control" id="keyFindings" rows="3" placeholder="e.g., 95% attendance rate, 10% SEND pupils exceeding expected progress"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="gapsConcerns" class="form-label">Gaps or Concerns</label>
+                    <textarea class="form-control" id="gapsConcerns" rows="3" placeholder="e.g., Persistent absenteeism in Year 9, attainment gap for disadvantaged pupils"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="supportPupilNeeds" class="form-label">Support for Pupil Needs</label>
+                    <textarea class="form-control" id="supportPupilNeeds" rows="3" placeholder="e.g., EHCPs updated for SEND pupils, interventions for low attendance"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="legislativeAlignmentPupil" class="form-label">Legislative Alignment</label>
+                    <textarea class="form-control" id="legislativeAlignmentPupil" rows="3" placeholder="e.g., SEND support complies with SEND Code of Practice 2015, Equality Act 2010 provisions for inclusivity"></textarea>
+                </div>
+            </div>
+
+            <!-- 4. Teaching and Operational Quality -->
+            <div class="form-section">
+                <h2>4. Teaching and Operational Quality</h2>
+                <p class="text-muted">Evaluate the quality of teaching, curriculum delivery, or operational processes (e.g., financial management, pastoral support) in the monitored area.</p>
+                <div class="mb-3">
+                    <label for="strengths" class="form-label">Strengths</label>
+                    <textarea class="form-control" id="strengths" rows="3" placeholder="e.g., Consistent use of positive reinforcement in behaviour management, robust financial controls"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="areasImprovement" class="form-label">Areas for Improvement</label>
+                    <textarea class="form-control" id="areasImprovement" rows="3" placeholder="e.g., Need for additional staff training in [area], inconsistent curriculum delivery"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="staffSupportTraining" class="form-label">Staff Support and Training</label>
+                    <textarea class="form-control" id="staffSupportTraining" rows="3" placeholder="e.g., CPD on trauma-informed practices completed, finance team trained on Academies Financial Handbook"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="legislativeAlignmentTeaching" class="form-label">Legislative Alignment</label>
+                    <textarea class="form-control" id="legislativeAlignmentTeaching" rows="3" placeholder="e.g., Curriculum meets DfE standards, financial oversight aligns with Academies Financial Handbook"></textarea>
+                </div>
+            </div>
+
+            <!-- 5. Statutory Compliance -->
+            <div class="form-section">
+                <h2>5. Statutory Compliance</h2>
+                <p class="text-muted">Confirm compliance with relevant legislation and statutory guidance for the monitored area.</p>
+                <div class="checkbox-list mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="safeguarding">
+                        <label class="form-check-label" for="safeguarding">Safeguarding: Practices align with Keeping Children Safe in Education (KCSIE)</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="send">
+                        <label class="form-check-label" for="send">SEND: Support plans (e.g., EHCPs) meet SEND Code of Practice 2015 requirements</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="equalityInclusion">
+                        <label class="form-check-label" for="equalityInclusion">Equality and Inclusion: Provision complies with Equality Act 2010</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="curriculumAssessment">
+                        <label class="form-check-label" for="curriculumAssessment">Curriculum/Assessment: Delivery meets DfE standards and JCQ regulations</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="attendance">
+                        <label class="form-check-label" for="attendance">Attendance: Registers and reporting comply with Education (Pupil Registration) Regulations 2006</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="behaviourExclusions">
+                        <label class="form-check-label" for="behaviourExclusions">Behaviour/Exclusions: Processes align with Education Act 2002 (Section 51A) and Education Act 2011</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="finance">
+                        <label class="form-check-label" for="finance">Finance: Expenditure and reporting meet Academies Financial Handbook requirements</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="careers">
+                        <label class="form-check-label" for="careers">Careers (Secondary/6th Form): Guidance meets Gatsby Benchmarks</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="otherCompliance">
+                        <label class="form-check-label" for="otherCompliance">Other: [Specify]</label>
+                        <input type="text" class="form-control mt-2" id="otherComplianceText" placeholder="e.g., GDPR for data handling, Education Act 2002 (Section 175) for safeguarding">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="nonComplianceIssues" class="form-label">Non-Compliance Issues</label>
+                    <textarea class="form-control" id="nonComplianceIssues" rows="3" placeholder="Detail any concerns and escalation steps, e.g., reported to Academy Committee Chair"></textarea>
+                </div>
+            </div>
+
+            <!-- 6. Stakeholder Engagement -->
+            <div class="form-section">
+                <h2>6. Stakeholder Engagement</h2>
+                <p class="text-muted">Summarize feedback from pupils, parents, staff, or external agencies (e.g., local authority, Ofsted preparation).</p>
+                <div class="mb-3">
+                    <label for="pupilVoice" class="form-label">Pupil Voice</label>
+                    <textarea class="form-control" id="pupilVoice" rows="3" placeholder="e.g., Pupils report feeling supported in [subject/area], concerns about [issue]"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="parentFeedback" class="form-label">Parent/Carer Feedback</label>
+                    <textarea class="form-control" id="parentFeedback" rows="3" placeholder="e.g., Positive feedback on pastoral support, concerns about communication"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="staffFeedback" class="form-label">Staff Feedback</label>
+                    <textarea class="form-control" id="staffFeedback" rows="3" placeholder="e.g., Teachers request more training in [area]"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="externalAgencies" class="form-label">External Agencies</label>
+                    <textarea class="form-control" id="externalAgencies" rows="3" placeholder="e.g., Local authority confirms compliance with EHCP reviews"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="engagementActions" class="form-label">Engagement Actions</label>
+                    <textarea class="form-control" id="engagementActions" rows="3" placeholder="e.g., Planned parent workshop, addressed pupil concerns via SLT"></textarea>
+                </div>
+            </div>
+
+            <!-- 7. Recommendations and Next Steps -->
+            <div class="form-section">
+                <h2>7. Recommendations and Next Steps</h2>
+                <p class="text-muted">Provide recommendations for improvement and planned actions for the next term.</p>
+                <div class="mb-3">
+                    <label for="recommendation1" class="form-label">Recommendation 1</label>
+                    <textarea class="form-control" id="recommendation1" rows="3" placeholder="e.g., Increase CPD for staff in [area]"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="recommendation2" class="form-label">Recommendation 2</label>
+                    <textarea class="form-control" id="recommendation2" rows="3" placeholder="e.g., Implement targeted interventions for [pupil group]"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="plannedActions" class="form-label">Planned Actions</label>
+                    <textarea class="form-control" id="plannedActions" rows="3" placeholder="e.g., Schedule learning walk for [subject/area], meet with [staff role]"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="supportNeeded" class="form-label">Support Needed</label>
+                    <textarea class="form-control" id="supportNeeded" rows="3" placeholder="e.g., SLT to provide updated data, Committee to review policy"></textarea>
+                </div>
+            </div>
+
+            <!-- 8. Summary for Academy Committee -->
+            <div class="form-section">
+                <h2>8. Summary for Academy Committee</h2>
+                <p class="text-muted">Provide a concise overview of findings, highlighting good practice and areas needing attention.</p>
+                <div class="mb-3">
+                    <label for="goodPractice" class="form-label">Good Practice</label>
+                    <textarea class="form-control" id="goodPractice" rows="3" placeholder="e.g., Strong SEND provision, high pupil engagement in [subject]"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="areasAttention" class="form-label">Areas for Attention</label>
+                    <textarea class="form-control" id="areasAttention" rows="3" placeholder="e.g., Attendance gaps in [year group], resource allocation in [area]"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="overallAssessment" class="form-label">Overall Assessment</label>
+                    <textarea class="form-control" id="overallAssessment" rows="3" placeholder="e.g., Area is performing well with minor adjustments needed"></textarea>
+                </div>
+            </div>
+
+            <!-- 9. Declaration -->
+            <div class="form-section">
+                <h2>9. Declaration</h2>
+                <div class="mb-3">
+                    <label for="signature" class="form-label">Link Member Signature</label>
+                    <input type="text" class="form-control" id="signature" placeholder="Your Name">
+                </div>
+                <div class="mb-3">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" class="form-control" id="date">
+                </div>
+                <div class="mb-3">
+                    <label for="confirmation" class="form-label">Confirmation</label>
+                    <textarea class="form-control" id="confirmation" rows="3" readonly>I confirm that the information provided is accurate and based on evidence gathered during monitoring activities. All statutory requirements have been reviewed, and any concerns have been escalated appropriately.</textarea>
+                </div>
+            </div>
+
+            <!-- Submission and Notes -->
+            <div class="form-section">
+                <h2>Submission and Notes</h2>
+                <p class="text-muted">
+                    <strong>Submission:</strong> Submit to the Academy Committee Chair by the end of the term for discussion at the next Committee meeting. Retain copies of evidence (e.g., data reports, observation notes) for Ofsted readiness.
+                </p>
+                <p class="text-muted">
+                    <strong>Notes:</strong><br>
+                    - Adapt sections as needed for specific subjects/areas (e.g., finance, curriculum, pastoral).<br>
+                    - Ensure confidentiality per GDPR and academy policies.<br>
+                    - Ascertain GDPR compliance for all data handling.<br>
+                    - Use evidence-based findings to support Ofsted inspection preparation.
+                </p>
+            </div>
+
+            <button type="button" class="btn btn-primary btn-submit w-100" id="saveReportBtn">Save Report</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.getElementById('saveReportBtn').addEventListener('click', function() {
+        const form = document.querySelector('form');
+        const elements = form.elements;
+        let lines = [];
+        for (let i = 0; i < elements.length; i++) {
+            const el = elements[i];
+            if (el.id && (el.type !== 'button' && el.type !== 'submit')) {
+                let label = '';
+                // Try to find the label text
+                const labelEl = form.querySelector('label[for="' + el.id + '"]');
+                if (labelEl) {
+                    label = labelEl.innerText;
+                } else {
+                    label = el.id;
+                }
+                let value = '';
+                if (el.type === 'checkbox') {
+                    value = el.checked ? 'Yes' : 'No';
+                } else {
+                    value = el.value;
+                }
+                lines.push(label + ': ' + value);
+            }
+        }
+        const text = lines.join('\n');
+        const blob = new Blob([text], {type: 'text/plain'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'link_member_report.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+    </script>
+    <footer class="footer mt-5 py-3 bg-light text-center">
+        <div class="container">
+            <span class="text-muted">&copy; 2025 Schools Governor Aid. All rights reserved.</span>
+        </div>
+    </footer>
+</body>
+</html>
