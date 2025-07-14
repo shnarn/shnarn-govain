@@ -47,7 +47,8 @@ function loadNavbar() {
     currentPath.includes('/primary/') ||
     currentPath.includes('/secondary/') ||
     currentPath.includes('/schoolVisit/') ||
-    currentPath.includes('/6thForm/')
+    currentPath.includes('/6thForm/') ||
+    currentPath.includes('/report/')
   ) {
     path = '../navbar.html';
   }
