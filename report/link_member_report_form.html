@@ -335,42 +335,32 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script>
     document.getElementById('saveReportBtn').addEventListener('click', function() {
         const mainContent = document.getElementById('main-content');
-        const form = mainContent.querySelector('form');
-        const elements = form.elements;
-        let lines = [];
-        for (let i = 0; i < elements.length; i++) {
-            const el = elements[i];
-            if (el.id && (el.type !== 'button' && el.type !== 'submit')) {
-                let label = '';
-                // Try to find the label text
-                const labelEl = form.querySelector('label[for="' + el.id + '"]');
-                if (labelEl) {
-                    label = labelEl.innerText;
-                } else {
-                    label = el.id;
-                }
-                let value = '';
-                if (el.type === 'checkbox') {
-                    value = el.checked ? 'Yes' : 'No';
-                } else {
-                    value = el.value;
-                }
-                lines.push(label + ': ' + value);
+        html2canvas(mainContent).then(function(canvas) {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new window.jspdf.jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
+            // Calculate width/height to fit A4
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            // Scale image to fit width
+            const imgWidth = pageWidth;
+            const imgHeight = canvas.height * (imgWidth / canvas.width);
+            let position = 0;
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            // If content is longer than one page, add more pages
+            let remainingHeight = imgHeight;
+            while (remainingHeight > pageHeight) {
+                position -= pageHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                remainingHeight -= pageHeight;
             }
-        }
-        const text = lines.join('\n');
-        const blob = new Blob([text], {type: 'text/plain'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'link_member_report.txt';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+            pdf.save('link_member_report.pdf');
+        });
     });
     </script>
     <footer class="footer mt-5 py-3 bg-light text-center">
